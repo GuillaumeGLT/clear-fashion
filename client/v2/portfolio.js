@@ -1,5 +1,5 @@
 // Invoking strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode
-'use strict';
+"use strict";
 
 /*
 Description of the available api
@@ -22,20 +22,19 @@ let currentProducts = [];
 let currentPagination = {};
 
 // instantiate the selectors
-const selectShow = document.querySelector('#show-select');
-const selectPage = document.querySelector('#page-select');
-const sectionProducts = document.querySelector('#products');
-const spanNbProducts = document.querySelector('#nbProducts');
-const selectBrand = document.querySelector('#brand-select');
-const buttonRecent = document.querySelector('#recent');
-
+const selectShow = document.querySelector("#show-select");
+const selectPage = document.querySelector("#page-select");
+const sectionProducts = document.querySelector("#products");
+const spanNbProducts = document.querySelector("#nbProducts");
+const selectBrand = document.querySelector("#brand-select");
+const buttonRecent = document.querySelector("#recent");
 
 /**
  * Set global value
  * @param {Array} result - products to display
  * @param {Object} meta - pagination meta info
  */
-const setCurrentProducts = ({result, meta}) => {
+const setCurrentProducts = ({ result, meta }) => {
   currentProducts = result;
   currentPagination = meta;
 };
@@ -56,13 +55,13 @@ const fetchProducts = async (page = 1, size = 12) => {
 
     if (body.success !== true) {
       console.error(body);
-      return {currentProducts, currentPagination};
+      return { currentProducts, currentPagination };
     }
 
     return body.data;
   } catch (error) {
     console.error(error);
-    return {currentProducts, currentPagination};
+    return { currentProducts, currentPagination };
   }
 };
 
@@ -70,11 +69,11 @@ const fetchProducts = async (page = 1, size = 12) => {
  * Render list of products
  * @param  {Array} products
  */
-const renderProducts = products => {
+const renderProducts = (products) => {
   const fragment = document.createDocumentFragment();
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   const template = products
-    .map(product => {
+    .map((product) => {
       return `
       <div class="product" id=${product.uuid}>
         <span>${product.brand}</span>
@@ -83,11 +82,11 @@ const renderProducts = products => {
       </div>
     `;
     })
-    .join('');
+    .join("");
 
   div.innerHTML = template;
   fragment.appendChild(div);
-  sectionProducts.innerHTML = '<h2>Products</h2>';
+  sectionProducts.innerHTML = "<h2>Products</h2>";
   sectionProducts.appendChild(fragment);
 };
 
@@ -95,12 +94,12 @@ const renderProducts = products => {
  * Render page selector
  * @param  {Object} pagination
  */
-const renderPagination = pagination => {
-  const {currentPage, pageCount} = pagination;
+const renderPagination = (pagination) => {
+  const { currentPage, pageCount } = pagination;
   const options = Array.from(
-    {'length': pageCount},
+    { length: pageCount },
     (value, index) => `<option value="${index + 1}">${index + 1}</option>`
-  ).join('');
+  ).join("");
 
   selectPage.innerHTML = options;
   selectPage.selectedIndex = currentPage - 1;
@@ -110,8 +109,8 @@ const renderPagination = pagination => {
  * Render page selector
  * @param  {Object} pagination
  */
-const renderIndicators = pagination => {
-  const {count} = pagination;
+const renderIndicators = (pagination) => {
+  const { count } = pagination;
 
   spanNbProducts.innerHTML = count;
 };
@@ -129,14 +128,17 @@ const render = (products, pagination) => {
 /**
  * Select the number of products to display
  */
-selectShow.addEventListener('change', async (event) => {
-  const products = await fetchProducts(currentPagination.currentPage, parseInt(event.target.value));
+selectShow.addEventListener("change", async (event) => {
+  const products = await fetchProducts(
+    currentPagination.currentPage,
+    parseInt(event.target.value)
+  );
 
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const products = await fetchProducts();
 
   setCurrentProducts(products);
@@ -245,4 +247,120 @@ buttonReasonablePrice.addEventListener('click', async () => {
 */
 
 /**feature 5
+/**
+ * Sort products by price
+ * @param  {Array} products
+ * @param  {String} order - 'asc' for ascending or 'desc' for descending order
  */
+/**
+const sortProductsByPrice = (products, order = "asc") => {
+  return products.sort((a, b) => {
+    if (order === "asc") {
+      return a.price - b.price;
+    } else {
+      return b.price - a.price;
+    }
+  });
+};
+
+/**
+ * Declaration of all Listeners
+ */
+
+/**
+ * Sort products by price
+ */
+/**
+selectSort.addEventListener("change", () => {
+  const order = selectSort.value;
+  const sortedProducts = sortProductsByPrice(currentProducts, order);
+
+  render(sortedProducts, currentPagination);
+});
+*/
+
+
+/**feature 6
+
+ * Fetch products from api with optional sort by date
+ * @param  {Number}  [page=1] - current page to fetch
+ * @param  {Number}  [size=12] - size of the page
+ * @param  {Boolean} [recent=false] - filter by recent products
+ * @param  {Boolean} [sortByDate=false] - sort by date
+ * @return {Object}
+ */
+/**
+const fetchProducts = async (page = 1, size = 12, recent = false, sortByDate = false) => {
+  try {
+    let url = `https://clear-fashion-api.vercel.app?page=${page}&size=${size}`;
+
+    if (recent) {
+      url += '&recent=true';
+    }
+
+    if (sortByDate) {
+      url += '&sort=date';
+    }
+
+    const response = await fetch(url);
+    const body = await response.json();
+
+    if (body.success !== true) {
+      console.error(body);
+      return {currentProducts, currentPagination};
+    }
+
+    return body.data;
+  } catch (error) {
+    console.error(error);
+    return {currentProducts, currentPagination};
+  }
+};
+
+/**
+ * Sort products by date, from most recent to oldest
+ */
+/**
+const sortByDate = () => {
+  currentProducts.sort((a, b) => new Date(b.date) - new Date(a.date));
+};
+
+/**
+ * Sort products by price, from lowest to highest
+ */
+/**
+const sortByPrice = () => {
+  currentProducts.sort((a, b) => a.price - b.price);
+};
+
+/**
+ * Declaration of all Listeners
+ */
+
+/**
+ * Sort the products by price or date when clicking on the sort buttons
+ */
+/**
+buttonPrice.addEventListener('click', () => {
+  sortByPrice();
+  render(currentProducts, currentPagination);
+});
+
+buttonDate.addEventListener('click', async () => {
+  const products = await fetchProducts(currentPagination.currentPage, parseInt(selectShow.value), false, true);
+
+  setCurrentProducts(products);
+  sortByDate();
+  render(currentProducts, currentPagination);
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const products = await fetchProducts();
+
+  setCurrentProducts(products);
+  render(currentProducts, currentPagination);
+});
+*/
+
+/**feature 9
+*/
