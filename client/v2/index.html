@@ -21,10 +21,19 @@
       </div>
       <div id="filters">
         <span>By reasonable price</span>
-        <span>By recently released</span>
+          <button id="reasonable-price">Reasonable price</button>
+        <br><span>By recently released</span><br>
         <div id="brand">
-          <label for="brand-select">By brands:</label>
-          <select name="brand" id="brand-select"> </select>
+          <label for="brand-select">Brand:</label>
+          <select id="brand-select">
+            <option value="">All</option>
+            <option value="nudie-jeans">Nudie Jeans</option>
+            <option value="patagonia">Patagonia</option>
+            <option value="puma">Puma</option>
+            <option value="thinking-mu">Thinking MU</option>
+            <option value="veja">Veja</option>
+            <option value="wemoto">Wemoto</option>
+          </select>
         </div>
       </div>
       <div id="sort">
@@ -67,6 +76,7 @@
         <span>Last released date</span>
         <span>2020-01-01</span>
       </div>
+      
     </section>
     <section id="products"></section>
     <script type="text/javascript" charset="UTF-8" src="portfolio.js"></script>

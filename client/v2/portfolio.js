@@ -26,6 +26,9 @@ const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
+const selectBrand = document.querySelector('#brand-select');
+const buttonRecent = document.querySelector('#recent');
+
 
 /**
  * Set global value
@@ -41,6 +44,7 @@ const setCurrentProducts = ({result, meta}) => {
  * Fetch products from api
  * @param  {Number}  [page=1] - current page to fetch
  * @param  {Number}  [size=12] - size of the page
+ * @param  {Boolean} [recent=false] - filter by recent products
  * @return {Object}
  */
 const fetchProducts = async (page = 1, size = 12) => {
@@ -138,3 +142,107 @@ document.addEventListener('DOMContentLoaded', async () => {
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });
+
+/**feature 1
+
+selectPage.addEventListener('change', async (event) => {
+  const page = parseInt(event.target.value);
+  const products = await fetchProducts(page);
+
+  setCurrentProducts(products);
+  render(currentProducts, currentPagination);
+});
+*/
+
+/**feature 2
+ * Filter products by brand
+ * @param  {String} brand - brand name to filter by
+ * @param  {Array} products - array of products to filter
+ * @return {Array} - filtered array of products
+
+const filterProducts = (brand, products) => {
+  if (!brand) return products;
+  return products.filter(product => product.brand === brand);
+}
+*/
+
+/**feature 3
+const fetchProducts = async (page = 1, size = 12, recent = false) => {
+  try {
+    let url = `https://clear-fashion-api.vercel.app?page=${page}&size=${size}`;
+    if (recent) {
+      url += '&recent=true';
+    }
+    const response = await fetch(url);
+    const body = await response.json();
+
+    if (body.success !== true) {
+      console.error(body);
+      return {currentProducts, currentPagination};
+    }
+
+    return body.data;
+  } catch (error) {
+    console.error(error);
+    return {currentProducts, currentPagination};
+  }
+};
+*/
+
+/**feature 4
+
+/**
+ * Fetch products from api and filter by price
+ * @param  {Number}  [page=1] - current page to fetch
+ * @param  {Number}  [size=12] - size of the page
+ * @param  {Boolean} [recent=false] - filter by recent products
+ * @param  {Number}  [maxPrice=50] - filter by maximum price
+ * @return {Object}
+ */
+/**
+const fetchProductsAndFilterByPrice = async (page = 1, size = 12, recent = false, maxPrice = 50) => {
+  try {
+    const response = await fetch(
+      `https://clear-fashion-api.vercel.app?page=${page}&size=${size}`
+    );
+    const body = await response.json();
+
+    if (body.success !== true) {
+      console.error(body);
+      return {currentProducts, currentPagination};
+    }
+
+    const filteredProducts = body.data.result.filter(product => product.price <= maxPrice);
+
+    return {
+      result: filteredProducts,
+      meta: {
+        currentPage: body.data.currentPage,
+        pageCount: body.data.pageCount,
+        count: filteredProducts.length,
+      }
+    };
+  } catch (error) {
+    console.error(error);
+    return {currentProducts, currentPagination};
+  }
+};
+*/
+/**
+ * Declaration of all Listeners
+ */
+
+/**
+ * Filter by reasonable price
+ */
+/**
+buttonReasonablePrice.addEventListener('click', async () => {
+  const products = await fetchProductsAndFilterByPrice();
+
+  setCurrentProducts(products);
+  render(currentProducts, currentPagination);
+});
+*/
+
+/**feature 5
+ */
