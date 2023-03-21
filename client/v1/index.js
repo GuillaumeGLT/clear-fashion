@@ -494,3 +494,5 @@ console.log(jacket);
 
 const localStorage = Object.assign([], MY_FAVORITE_BRANDS);
 console.log(localStorage);
+
+//Clear

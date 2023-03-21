@@ -401,3 +401,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('lastReleasedDate').innerHTML = getLastReleasedDate(allProducts.result);
   setupFavoriteButton();
 });
+
+//Clear
