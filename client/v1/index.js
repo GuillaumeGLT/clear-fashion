@@ -35,6 +35,9 @@ console.log(MY_FAVORITE_BRANDS[0]);
 // I can find on these e-shops
 // 2. Log the variable
 
+const cheapest ="https://www.faguo-store.com/fr/vetements/7606-arcy-t-shirt-en-coton-recycle-kaki.html";
+console.log(cheapest);
+
 /**
  * 👕
  * Easy 😁?
@@ -44,32 +47,64 @@ console.log(MY_FAVORITE_BRANDS[0]);
  * 👕
  */
 
+
 // 🎯 TODO 2: Number of products
 // 1. Create a variable and assign it the number of products
 // 2. Log the variable
+
+const number_of_products = marketplace.length;
+console.log(number_of_products);
 
 // 🎯 TODO 3: Brands name
 // 1. Create a variable and assign it the list of brands name only
 // 2. Log the variable
 // 3. Log how many brands we have
 
+const brand_names = marketplace.map(x=>x.brand);
+console.log(brand_names);
+console.log(brand_names.length);
+
+
 // 🎯 TODO 4: Sort by price
 // 1. Create a function to sort the marketplace products by price
 // 2. Create a variable and assign it the list of products by price from lowest to highest
 // 3. Log the variable
+
+const liste_price = marketplace.sort((product1,product2) => product1.price - product2.price);
+const products_sorted_price = liste_price.map(x=>x.name);
+console.log(products_sorted_price);
 
 // 🎯 TODO 5: Sort by date
 // 1. Create a function to sort the marketplace objects by products date
 // 2. Create a variable and assign it the list of products by date from recent to old
 // 3. Log the variable
 
+const date_ordered = marketplace.sort((productA,productB) => { 
+  var dateA = new Date(productA.released);
+  var dateB = new Date(productB.released);
+  return dateB - dateA;});
+  
+const products_sorted_date = date_ordered.map(x=>x.name);
+console.log(products_sorted_date);
+
 // 🎯 TODO 6: Filter a specific price range
 // 1. Filter the list of products between 50€ and 100€
 // 2. Log the list
 
+const price_filtered = marketplace.filter(products => products.price>=50 && products.price<=100);
+const products_filtered_price=price_filtered.map(x=>x.name);
+console.log(price_filtered);
+
 // 🎯 TODO 7: Average price
 // 1. Determine the average price of the marketplace
 // 2. Log the average
+
+const Sumprice = marketplace.reduce(function(total,item) { // here reduce ables to compute the sum of the prices
+  return total + item.price;
+}, 0);
+
+const average_price = Sumprice/marketplace.length;
+console.log(average_price);
 
 /**
  * 🏎
@@ -94,13 +129,58 @@ console.log(MY_FAVORITE_BRANDS[0]);
 // 2. Log the variable
 // 3. Log the number of products by brands
 
+const brands={};
+for (const product of marketplace) // We loop through each object in the marketplace array and assign each object to the product variable.
+{
+  const brand_Name = product.brand;  // brand_Name is the product's brand
+  if (!brands[brand_Name]) // we check if the array for the given brand doesn't exist
+  {
+    brands[brand_Name] = []; // if it's the case we create an empty array 
+  }
+  brands[brand_Name].push(product); // we add the product to the array brands[brand_Name]
+};
+
+console.log(brands);
+
+const brands_products = Object.entries(brands).reduce((nb_products, [brand, products]) => {
+  nb_products[brand] = products.length; 
+  return nb_products;}, {});
+
+// Object.entries(brands) method ables to convert brands into an array of key-value pairs (brand : products)
+// reduce creates the object nb_products which counts the number of products for each brand
+// At the beginning nb_products object is as an empty object
+// For each key-value pair, a new property is created in the object nb_products with brand name (key) and product.length(value)
+
+console.log(brands_products);
+
 // 🎯 TODO 9: Sort by price for each brand
 // 1. For each brand, sort the products by price, from highest to lowest
 // 2. Log the sort
 
+const brand_price_sorted = {};
+for (const brand in brands) {
+  const sorted_priced = brands[brand].sort((product1, product2) => product2.price - product1.price); // we sort the price for each brand
+  brand_price_sorted[brand] = sorted_priced; // we add the sorted list of prices related to the brand value
+}
+
+console.log(brand_price_sorted);
+
+
 // 🎯 TODO 10: Sort by date for each brand
 // 1. For each brand, sort the products by date, from old to recent
 // 2. Log the sort
+
+const brand_date_sorted = {};
+for (const brand in brands) {
+  const sorted_date = brands[brand].sort((productA, productB) => {
+    const dateA = new Date(productA.released);                    //we sort the date for each brand
+    const dateB = new Date(productB.released);  
+    return dateA - dateB;
+  });
+  brand_date_sorted[brand] = sorted_date; // we add the sorted list of dates related to the brand value
+}
+
+console.log(brand_date_sorted);
 
 /**
  * 💶
@@ -112,6 +192,17 @@ console.log(MY_FAVORITE_BRANDS[0]);
 // 🎯 TODO 11: Compute the p90 price value
 // 1. Compute the p90 price value of each brand
 // The p90 value (90th percentile) is the lower value expected to be exceeded in 90% of the products
+
+const p90_prices_brand = {};
+for (const brand in brands) {
+  const prices_brand = brands[brand].map(product => product.price); // we get the prices related to the brand
+  prices_brand.sort((a, b) => a - b); // we sort the prices
+  const index_p90 = Math.floor(prices_brand.length*0.9); 
+  const value_p90 = prices_brand[index_p90];
+  p90_prices_brand[brand] = value_p90; // we add the p90value to the brand associated
+}
+
+console.log(p90_prices_brand);
 
 /**
  * 🧥
@@ -305,17 +396,44 @@ const COTELE_PARIS = [
 // // 1. Log if we have new products only (true or false)
 // // A new product is a product `released` less than 2 weeks.
 
+const newProducts = marketplace.some(product => { // some iterates over each product
+  const productDate = new Date(product.released);
+  const today = new Date();
+  const twoWeeksAgo = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000); // 2 weeks ago
+  return productDate > twoWeeksAgo // this condition implies that the product was released less than 2 weeks ago
+});
+
+console.log(newProducts);
+
 // 🎯 TODO 2: Reasonable price
 // // 1. Log if coteleparis is a reasonable price shop (true or false)
 // // A reasonable price if all the products are less than 100€
+
+const prices = COTELE_PARIS.map(x=>x.price);
+
+function checkPrice(price){
+  return price<100;
+}
+
+let reasonable = prices.every(checkPrice)
+
+console.log(reasonable);
 
 // 🎯 TODO 3: Find a specific product
 // 1. Find the product with the uuid `2b9a47e3-ed73-52f6-8b91-379e9c8e526c`
 // 2. Log the product
 
+var specific_product = COTELE_PARIS.find(x => x.uuid === "2b9a47e3-ed73-52f6-8b91-379e9c8e526c");
+console.log(specific_product.name);
+
 // 🎯 TODO 4: Delete a specific product
 // 1. Delete the product with the uuid `2b9a47e3-ed73-52f6-8b91-379e9c8e526c`
 // 2. Log the new list of product
+
+const product_uid = '2b9a47e3-ed73-52f6-8b91-379e9c8e526c';
+const updatedProducts = COTELE_PARIS.filter(product => product.uuid !== product_uid); // filters the product without the uuid 
+const new_liste_products =updatedProducts.map(x=>x.name);
+console.log(new_liste_products);
 
 // 🎯 TODO 5: Save the favorite product
 // We declare and assign a variable called `blueJacket`
@@ -334,11 +452,14 @@ let blueJacket = {
 // we make a copy of `blueJacket` to `jacket` variable
 // and set a new property `favorite` to true
 let jacket = blueJacket;
-
 jacket.favorite = true;
 
 // 1. Log `blueJacket` and `jacket` variables
 // 2. What do you notice?
+console.log(blueJacket);
+console.log(jacket);
+
+// We can notice that the new property favorite is added to both jacket and blue Jacket.
 
 // we make a new assignment again
 blueJacket = {
@@ -355,6 +476,12 @@ blueJacket = {
 
 // 3. Update `jacket` property with `favorite` to true WITHOUT changing blueJacket properties
 
+jacket = Object.assign({}, blueJacket, { favorite: true }); // we use object.assign() to create a copy of blueJacket
+// we set favorite to true and this is not affecting blueJacket object as they are both separate objects in memory.
+
+console.log(blueJacket);
+console.log(jacket);
+
 /**
  * 🎬
  * The End: last thing to do
@@ -364,3 +491,6 @@ blueJacket = {
 // 🎯 LAST TODO: Save in localStorage
 // 1. Save MY_FAVORITE_BRANDS in the localStorage
 // 2. log the localStorage
+
+const localStorage = Object.assign([], MY_FAVORITE_BRANDS);
+console.log(localStorage);
